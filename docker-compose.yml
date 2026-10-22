@@ -1,0 +1,27 @@
+services:
+  pgsql:
+    image: postgres:16-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: stockpilot_user
+      POSTGRES_PASSWORD: secretpassword
+      POSTGRES_DB: stockpilot_erp
+    volumes:
+      - stockpilot_pg_data:/var/lib/postgresql/data
+    networks:
+      - stockpilot_network
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - stockpilot_network
+
+volumes:
+  stockpilot_pg_data:
+
+networks:
+  stockpilot_network:
+    driver: bridge
