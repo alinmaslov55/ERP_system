@@ -1,8 +1,11 @@
 import './App.css'
+import ProductList from './features/products/ProductList'
 
 function App() {
   return (
-    <div></div>
+    <div className='min-h-screen bg-gray-50'>
+      <ProductList/>
+    </div>
   )
 }
 
