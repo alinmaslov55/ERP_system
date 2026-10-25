@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "../../lib/axios";
 import CreateProductForm from "./CreateProductForm";
 
@@ -19,6 +19,26 @@ export default function ProductList(){
         }
     });
 
+    const queryClient = useQueryClient();
+
+    const deleteMutation = useMutation({
+        mutationFn: async (id: number) => {
+            await axios.delete(`/products/${id}`);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['products'] });
+        },
+        onError: () => {
+            alert('Failed to archive product.');
+        }
+    });
+
+    const handleArchive = (id: number) => {
+        if (window.confirm('Are you sure you want to archive this product?')) {
+            deleteMutation.mutate(id);
+        }
+    };
+
     if(isLoading) return <div className="p-8">Loading Products...</div>;
     if(isError) return <div className="p-8 text-red-500">Error fetching products</div>
 
@@ -34,12 +54,13 @@ export default function ProductList(){
                             <th className="p-4 font-semibold text-gray-600">Name</th>
                             <th className="p-4 font-semibold text-gray-600">Price</th>
                             <th className="p-4 font-semibold text-gray-600">Status</th>
+                            <th className="p-4 font-semibold text-gray-600 text-right">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {products?.length === 0 ? (
                             <tr>
-                                <td colSpan={4} className="p-4 text-center text-gray-500">No products found.</td>
+                                <td colSpan={5} className="p-4 text-center text-gray-500">No products found.</td>
                             </tr>
                         ) : (
                             products?.map((product) => (
@@ -51,6 +72,15 @@ export default function ProductList(){
                                         <span className={`px-2 py-1 text-xs rounded-full ${product.is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
                                             {product.is_active ? 'Active' : 'Inactive'}
                                         </span>
+                                    </td>
+                                    <td className="p-4 text-right">
+                                        <button 
+                                            onClick={() => handleArchive(product.id)}
+                                            disabled={deleteMutation.isPending}
+                                            className="text-red-500 hover:text-red-700 text-sm font-medium disabled:opacity-50"
+                                        >
+                                            Archive
+                                        </button>
                                     </td>
                                 </tr>
                             ))
