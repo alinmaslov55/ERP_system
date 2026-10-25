@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "../../lib/axios";
+import CreateProductForm from "./CreateProductForm";
 
 interface Product {
     id: number;
@@ -22,7 +23,8 @@ export default function ProductList(){
     if(isError) return <div className="p-8 text-red-500">Error fetching products</div>
 
     return (
-        <div className="p-8">
+        <div className="p-8 max-w-6xl mx-auto">
+            <CreateProductForm/>
             <h1 className="text-2xl font-bold mb-6">Product Catalog</h1>
             <div className="overflow-x-auto bg-white rounded shadow">
                 <table className="w-full text-left border-collapse">
