@@ -2,9 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
 use App\Models\Category;
+use Illuminate\Database\Seeder;
 
 class CategorySeeder extends Seeder
 {
@@ -13,18 +12,14 @@ class CategorySeeder extends Seeder
      */
     public function run(): void
     {
-        Category::insert([
-            [
-                'name' => 'Electronics',
-                'description' => 'Gadgets and devices',
-                'created_at' => now(),
-                'updated_at' => now()
-            ],[
-                'name' => 'Office Supplies',
-                'description' => 'Desks, chairs, and stationery',
-                'created_at' => now(),
-                'updated_at' => now()
-            ]
-        ]);
+        Category::firstOrCreate(
+            ['name' => 'Electronics'],
+            ['description' => 'Gadgets and devices']
+        );
+
+        Category::firstOrCreate(
+            ['name' => 'Office Supplies'],
+            ['description' => 'Desks, chairs, and stationery']
+        );
     }
 }

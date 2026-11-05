@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
+use App\Models\Category;
 use App\Models\Product;
+use Illuminate\Database\Seeder;
 
 class ProductSeeder extends Seeder
 {
@@ -13,10 +13,13 @@ class ProductSeeder extends Seeder
      */
     public function run(): void
     {
-        Product::insert([
+        $electronics = Category::where('name', 'Electronics')->first();
+        $officeSupplies = Category::where('name', 'Office Supplies')->first();
+
+        Product::firstOrCreate(
+            ['sku' => 'LAP-001'],
             [
-                'category_id' => 1, // Electronics
-                'sku' => 'LAP-001',
+                'category_id' => $electronics?->id ?? 1,
                 'name' => 'Pro Laptop 15-inch',
                 'description' => 'High-performance laptop',
                 'unit' => 'piece',
@@ -24,11 +27,13 @@ class ProductSeeder extends Seeder
                 'selling_price' => 1200.00,
                 'reorder_level' => 10,
                 'is_active' => true,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],[
-                'category_id' => 2, // Office Supplies
-                'sku' => 'CHR-002',
+            ]
+        );
+
+        Product::firstOrCreate(
+            ['sku' => 'CHR-002'],
+            [
+                'category_id' => $officeSupplies?->id ?? 2,
                 'name' => 'Ergonomic Mesh Chair',
                 'description' => 'Office chair with lumbar support',
                 'unit' => 'piece',
@@ -36,9 +41,7 @@ class ProductSeeder extends Seeder
                 'selling_price' => 150.00,
                 'reorder_level' => 20,
                 'is_active' => true,
-                'created_at' => now(),
-                'updated_at' => now(),
             ]
-        ]);
+        );
     }
 }

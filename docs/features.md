@@ -105,7 +105,7 @@ Every feature below lists its **Hard Prerequisites (`Depends On`)**, the **Downs
 
 | Code | Feature Title | Tier | Status | Depends On (Prerequisites) | Required By (Unlocks Downstream) | Dependency Rationale |
 |---|---|---|---|---|---|---|
-| [`AUT-001`](#aut-001--spa-cookie-authentication-api) | SPA Cookie Authentication API | V1 | `Partial` | *None (Root)* | `AUT-002`, `AUT-003`, `AUD-001`, `AUD-002`, `INV-001`, `PUR-001`, `SAL-001`, `ARC-003` | Provides `auth:sanctum` session guard & `auth()->id()` actor identity. |
+| [`AUT-001`](#aut-001--spa-cookie-authentication-api) | SPA Cookie Authentication API | V1 | `Done` | *None (Root)* | `AUT-002`, `AUT-003`, `AUD-001`, `AUD-002`, `INV-001`, `PUR-001`, `SAL-001`, `ARC-003` | Provides `auth:sanctum` session guard & `auth()->id()` actor identity. |
 | [`AUT-002`](#aut-002--frontend-login--session-guard) | Frontend Login & Session Guard | V1 | `Todo` | `AUT-001`, `UIX-001` | `AUT-005`, `DSH-001`, `QAT-002`, `QAT-003` | Hydrates `['auth', 'me']` user context & wraps private routes in `AppShell`. |
 | [`AUT-003`](#aut-003--roles--permissions-schema) | Roles & Permissions Schema | V1 | `Todo` | `AUT-001` | `AUT-004`, `OPS-002` | Defines `roles` & `permissions` tables needed by Policies and Demo Seeders. |
 | [`AUT-004`](#aut-004--server-side-authorization-policies) | Server-Side Authorization Policies | V1 | `Todo` | `AUT-003` | `AUT-005`, `QAT-001`, `QAT-003` | Enforces `$this->authorize()` gates across all `/api/v1/*` controllers. |
@@ -298,7 +298,7 @@ Use these dependency layers to parallelize work safely without ever getting bloc
 ---
 
 #### `AUT-001` — SPA Cookie Authentication API
-- **Tier:** `V1` · **Status:** `Partial`
+- **Tier:** `V1` · **Status:** `Done`
 - **Depends On:** *None (Layer 0 Root)*
 - **Required By (Unlocks):** `AUT-002`, `AUT-003`, `AUD-001`, `AUD-002`, `INV-001`, `PUR-001`, `SAL-001`, `ARC-003`
 - **Objective:** Authenticate ERP users securely via Laravel Sanctum cookie-based SPA sessions (or token fallback for API testing) and protect all `/api/v1/*` operational endpoints.
@@ -317,9 +317,9 @@ Use these dependency layers to parallelize work safely without ever getting bloc
   - Wrap `/api/v1` resource routes (`products`, `categories`, `warehouses`, etc.) inside `Route::middleware('auth:sanctum')`.
   - Regenerate session ID on login (`$request->session()->regenerate()`) to prevent session fixation, and update `last_login_at`.
 - **Acceptance Criteria:**
-  - [ ] Unauthenticated requests to `/api/v1/products` return `401 Unauthorized` JSON.
-  - [ ] Valid credentials establish an HTTP-only session cookie and return user + role metadata.
-  - [ ] Deactivated users (`is_active = false`) cannot log in and existing sessions are rejected.
+  - [x] Unauthenticated requests to `/api/v1/products` return `401 Unauthorized` JSON.
+  - [x] Valid credentials establish an HTTP-only session cookie and return user + role metadata.
+  - [x] Deactivated users (`is_active = false`) cannot log in and existing sessions are rejected.
 
 ---
 
