@@ -19,9 +19,11 @@ class AuthController extends Controller
     {
         $request->authenticate();
 
+        $user = $request->user()->load(['roles.permissions']);
+
         return response()->json([
             'message' => 'Authenticated',
-            'data' => new UserResource($request->user()),
+            'data' => new UserResource($user),
         ], 200);
     }
 
@@ -47,8 +49,10 @@ class AuthController extends Controller
      */
     public function me(Request $request): JsonResponse
     {
+        $user = $request->user()->load(['roles.permissions']);
+
         return response()->json([
-            'data' => new UserResource($request->user()),
+            'data' => new UserResource($user),
         ]);
     }
 }

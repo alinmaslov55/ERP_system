@@ -107,7 +107,7 @@ Every feature below lists its **Hard Prerequisites (`Depends On`)**, the **Downs
 |---|---|---|---|---|---|---|
 | [`AUT-001`](#aut-001--spa-cookie-authentication-api) | SPA Cookie Authentication API | V1 | `Done` | *None (Root)* | `AUT-002`, `AUT-003`, `AUD-001`, `AUD-002`, `INV-001`, `PUR-001`, `SAL-001`, `ARC-003` | Provides `auth:sanctum` session guard & `auth()->id()` actor identity. |
 | [`AUT-002`](#aut-002--frontend-login--session-guard) | Frontend Login & Session Guard | V1 | `Done` | `AUT-001`, `UIX-001` | `AUT-005`, `DSH-001`, `QAT-002`, `QAT-003` | Hydrates `['auth', 'me']` user context & wraps private routes in `AppShell`. |
-| [`AUT-003`](#aut-003--roles--permissions-schema) | Roles & Permissions Schema | V1 | `Todo` | `AUT-001` | `AUT-004`, `OPS-002` | Defines `roles` & `permissions` tables needed by Policies and Demo Seeders. |
+| [`AUT-003`](#aut-003--roles--permissions-schema) | Roles & Permissions Schema | V1 | `Done` | `AUT-001` | `AUT-004`, `OPS-002` | Defines `roles` & `permissions` tables needed by Policies and Demo Seeders. |
 | [`AUT-004`](#aut-004--server-side-authorization-policies) | Server-Side Authorization Policies | V1 | `Todo` | `AUT-003` | `AUT-005`, `QAT-001`, `QAT-003` | Enforces `$this->authorize()` gates across all `/api/v1/*` controllers. |
 | [`AUT-005`](#aut-005--user--role-administration-ui) | User & Role Administration UI | V1 | `Todo` | `AUT-002`, `AUT-004`, `UIX-002` | `QAT-002` | Requires auth session, server RBAC policies, and `<Can>` UI permission helper. |
 | [`AUD-001`](#aud-001--transaction-actor-attribution) | Transaction Actor Attribution | V1 | `Todo` | `AUT-001` | `INV-002`, `PUR-002`, `PUR-004`, `SAL-002`, `SAL-004`, `SAL-006` | Supplies `performed_by` / `created_by` / `received_by` FK to `users.id`. |
@@ -344,7 +344,7 @@ Use these dependency layers to parallelize work safely without ever getting bloc
 ---
 
 #### `AUT-003` — Roles & Permissions Schema
-- **Tier:** `V1` · **Status:** `Todo`
+- **Tier:** `V1` · **Status:** `Done`
 - **Depends On:** `AUT-001` (`users` table & auth foundation)
 - **Required By (Unlocks):** `AUT-004` (Policies), `OPS-002` (Demo role accounts)
 - **Objective:** Model the four canonical ERP roles and granular action permissions in PostgreSQL.
@@ -358,8 +358,8 @@ Use these dependency layers to parallelize work safely without ever getting bloc
 - **Seeded Permission Slugs (`RolePermissionSeeder`):**
   - `dashboard.view`, `products.view`, `products.manage`, `categories.manage`, `warehouses.view`, `warehouses.manage`, `inventory.view`, `inventory.adjust`, `inventory.transfer`, `suppliers.view`, `suppliers.manage`, `po.view`, `po.manage`, `po.receive`, `customers.view`, `customers.manage`, `so.view`, `so.manage`, `so.fulfill`, `payments.manage`, `reports.view`, `reports.export`, `users.manage`, `audit.view`.
 - **Acceptance Criteria:**
-  - [ ] Running `php artisan db:seed --class=RolePermissionSeeder` idempotently seeds all 4 roles (`admin`, `manager`, `warehouse_operator`, `sales_operator`) and maps their exact permissions.
-  - [ ] `$user->hasPermission(...)` resolves permissions without N+1 queries when `roles.permissions` is eager-loaded.
+  - [x] Running `php artisan db:seed --class=RolePermissionSeeder` idempotently seeds all 4 roles (`admin`, `manager`, `warehouse_operator`, `sales_operator`) and maps their exact permissions.
+  - [x] `$user->hasPermission(...)` resolves permissions without N+1 queries when `roles.permissions` is eager-loaded.
 
 ---
 
