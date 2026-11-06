@@ -155,7 +155,7 @@ Every feature below lists its **Hard Prerequisites (`Depends On`)**, the **Downs
 | [`RPT-004`](#rpt-004--csv-export--bulk-csv-import) | CSV Export & Bulk CSV Import | V2 | `Todo` | `RPT-001`, `RPT-002`, `RPT-003`, `PRD-003` | `RPT-005` | Streams report queries to CSV and imports product CSV rows. |
 | [`RPT-005`](#rpt-005--queued-background-report-generation) | Queued Background Report Generation | V3 | `Todo` | `RPT-004`, `OPS-001` | *Leaf Feature* | Dispatches heavy CSV/PDF generation to Redis queue worker (`OPS-001`). |
 | [`UIX-001`](#uix-001--b2b-application-layout--router-navigation) | B2B Application Layout & Router Navigation | V1 | `Done` | *None (Root)* | `AUT-002`, `PRD-002`, `WHS-002`, `UIX-002` | Root `React Router` shell & sidebar hosting all feature pages. |
-| [`UIX-002`](#uix-002--reusable-data-table--ui-component-kit) | Reusable Data-Table & UI Component Kit | V1 | `Todo` | `UIX-001` | `UIX-003`, `PRD-002`, `PRD-004`, `WHS-002`, `INV-004`, `PUR-001`, `PUR-005`, `SAL-001`, `RPT-001`–`003`, `AUT-005`, `AUD-003`, `QAT-002` | Shared `<DataTable>`, `<Modal>`, `<Badge>`, and `<Toast>` primitives. |
+| [`UIX-002`](#uix-002--reusable-data-table--ui-component-kit) | Reusable Data-Table & UI Component Kit | V1 | `Done` | `UIX-001` | `UIX-003`, `PRD-002`, `PRD-004`, `WHS-002`, `INV-004`, `PUR-001`, `PUR-005`, `SAL-001`, `RPT-001`–`003`, `AUT-005`, `AUD-003`, `QAT-002` | Shared `<DataTable>`, `<Modal>`, `<Badge>`, and `<Toast>` primitives. |
 | [`UIX-003`](#uix-003--zod-form-validation--resilient-ui-states) | Zod Form Validation & Resilient UI States | V1 | `Partial` | `UIX-002` | `PRD-003`, `INV-003`, `PUR-005`, `QAT-002` | Provides Zod + server `422` field error mapper for all ERP forms. |
 | [`ARC-001`](#arc-001--form-requests-api-resources--pagination-standard) | Form Requests, API Resources & Pagination Standard | V1 | `Todo` | *None (Root)* | `PRD-004`, `INV-003`, `PUR-001`, `SAL-001`, `ARC-003`, `OPS-004` | Establishes uniform JSON pagination & error envelopes across `/api/v1`. |
 | [`ARC-002`](#arc-002--idempotency--database-integrity-constraints) | Idempotency & Database Integrity Constraints | V1 | `Todo` | `INV-001` | `PUR-004`, `SAL-004`, `SAL-006`, `QAT-001` | Guards receipts, shipments, and payments against duplicate retry writes. |
@@ -1262,7 +1262,7 @@ Use these dependency layers to parallelize work safely without ever getting bloc
 ---
 
 #### `UIX-002` — Reusable Data-Table & UI Component Kit
-- **Tier:** `V1` · **Status:** `Todo`
+- **Tier:** `V1` · **Status:** `Done`
 - **Depends On:** `UIX-001` (AppShell & design tokens)
 - **Required By (Unlocks):** `UIX-003`, `PRD-002`, `PRD-004`, `WHS-002`, `INV-004`, `PUR-001`, `PUR-005`, `SAL-001`, `RPT-001`–`003`, `AUT-005`, `AUD-003`, `QAT-002`
 - **Objective:** Eliminate duplicated table/modal markup by building typed, accessible UI primitives shared across Products, Inventory, POs, SOs, and Reports.
@@ -1273,8 +1273,8 @@ Use these dependency layers to parallelize work safely without ever getting bloc
   - `ui/Modal.tsx` & `ui/ConfirmDialog.tsx` — Accessible Escape-key / backdrop-aware dialog replacing native `window.confirm()`.
   - `ui/Toast.tsx` — Non-blocking toast notification provider replacing native `window.alert()`.
 - **Acceptance Criteria:**
-  - [ ] Native `window.alert()` and `window.confirm()` calls in `ProductList.tsx` and `CreateProductForm.tsx` are replaced with `Toast` and `ConfirmDialog`.
-  - [ ] All dialogs trap keyboard focus and close on `Escape`.
+  - [x] Native `window.alert()` and `window.confirm()` calls in `ProductList.tsx` and `CreateProductForm.tsx` are replaced with `Toast` and `ConfirmDialog`.
+  - [x] All dialogs trap keyboard focus and close on `Escape`.
 
 ---
 
