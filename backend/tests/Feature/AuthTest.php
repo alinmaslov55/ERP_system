@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use Database\Seeders\RolePermissionSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\Sanctum;
@@ -11,6 +12,12 @@ use Tests\TestCase;
 class AuthTest extends TestCase
 {
     use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->seed(RolePermissionSeeder::class);
+    }
 
     public function test_user_can_login_with_valid_credentials(): void
     {
@@ -152,6 +159,7 @@ class AuthTest extends TestCase
     public function test_authenticated_user_can_access_products(): void
     {
         $user = User::factory()->create();
+        $user->assignRole('admin');
         Sanctum::actingAs($user);
 
         $response = $this->getJson('/api/v1/products');

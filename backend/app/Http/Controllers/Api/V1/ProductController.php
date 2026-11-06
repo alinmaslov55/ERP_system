@@ -14,6 +14,8 @@ class ProductController extends Controller
      */
     public function index(): JsonResponse
     {
+        $this->authorize('viewAny', Product::class);
+
         $products = Product::with('category')->get();
         return response()->json(['data' => $products]);
     }
@@ -23,6 +25,8 @@ class ProductController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
+        $this->authorize('create', Product::class);
+
         $validated = $request->validate([
             'category_id' => 'required|exists:categories,id',
             'sku' => 'required|string|unique:products,sku',
@@ -32,14 +36,14 @@ class ProductController extends Controller
             'cost_price' => 'numeric|min:0',
             'selling_price' => 'numeric|min:0',
             'reorder_level' => 'integer|min:0',
-            'is_active' => 'boolean'
+            'is_active' => 'boolean',
         ]);
 
         $product = Product::create($validated);
 
         return response()->json([
             'message' => 'Product created successfully',
-            'data' => $product
+            'data' => $product,
         ], 201);
     }
 
@@ -48,6 +52,8 @@ class ProductController extends Controller
      */
     public function show(Product $product): JsonResponse
     {
+        $this->authorize('view', $product);
+
         $product->load('category');
         return response()->json(['data' => $product]);
     }
@@ -57,6 +63,8 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product): JsonResponse
     {
+        $this->authorize('update', $product);
+
         $validated = $request->validate([
             'category_id' => 'sometimes|exists:categories,id',
             'sku' => 'sometimes|string|unique:products,sku,' . $product->id,
@@ -66,14 +74,14 @@ class ProductController extends Controller
             'cost_price' => 'numeric|min:0',
             'selling_price' => 'numeric|min:0',
             'reorder_level' => 'integer|min:0',
-            'is_active' => 'boolean'
+            'is_active' => 'boolean',
         ]);
 
         $product->update($validated);
 
         return response()->json([
             'message' => 'Product updated successfully',
-            'data' => $product
+            'data' => $product,
         ]);
     }
 
@@ -82,10 +90,12 @@ class ProductController extends Controller
      */
     public function destroy(Product $product): JsonResponse
     {
+        $this->authorize('delete', $product);
+
         $product->delete();
 
         return response()->json([
-            'message' => 'Product archived successfully'
+            'message' => 'Product archived successfully',
         ]);
     }
 }

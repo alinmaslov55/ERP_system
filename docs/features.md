@@ -108,7 +108,7 @@ Every feature below lists its **Hard Prerequisites (`Depends On`)**, the **Downs
 | [`AUT-001`](#aut-001--spa-cookie-authentication-api) | SPA Cookie Authentication API | V1 | `Done` | *None (Root)* | `AUT-002`, `AUT-003`, `AUD-001`, `AUD-002`, `INV-001`, `PUR-001`, `SAL-001`, `ARC-003` | Provides `auth:sanctum` session guard & `auth()->id()` actor identity. |
 | [`AUT-002`](#aut-002--frontend-login--session-guard) | Frontend Login & Session Guard | V1 | `Done` | `AUT-001`, `UIX-001` | `AUT-005`, `DSH-001`, `QAT-002`, `QAT-003` | Hydrates `['auth', 'me']` user context & wraps private routes in `AppShell`. |
 | [`AUT-003`](#aut-003--roles--permissions-schema) | Roles & Permissions Schema | V1 | `Done` | `AUT-001` | `AUT-004`, `OPS-002` | Defines `roles` & `permissions` tables needed by Policies and Demo Seeders. |
-| [`AUT-004`](#aut-004--server-side-authorization-policies) | Server-Side Authorization Policies | V1 | `Todo` | `AUT-003` | `AUT-005`, `QAT-001`, `QAT-003` | Enforces `$this->authorize()` gates across all `/api/v1/*` controllers. |
+| [`AUT-004`](#aut-004--server-side-authorization-policies) | Server-Side Authorization Policies | V1 | `Done` | `AUT-003` | `AUT-005`, `QAT-001`, `QAT-003` | Enforces `$this->authorize()` gates across all `/api/v1/*` controllers. |
 | [`AUT-005`](#aut-005--user--role-administration-ui) | User & Role Administration UI | V1 | `Todo` | `AUT-002`, `AUT-004`, `UIX-002` | `QAT-002` | Requires auth session, server RBAC policies, and `<Can>` UI permission helper. |
 | [`AUD-001`](#aud-001--transaction-actor-attribution) | Transaction Actor Attribution | V1 | `Todo` | `AUT-001` | `INV-002`, `PUR-002`, `PUR-004`, `SAL-002`, `SAL-004`, `SAL-006` | Supplies `performed_by` / `created_by` / `received_by` FK to `users.id`. |
 | [`AUD-002`](#aud-002--core-audit-log-recording) | Core Audit Log Recording | V1 | `Todo` | `AUT-001` | `AUD-003`, `PUR-003`, `PUR-006`, `SAL-005` | Provides `AuditLogger` service & `audit_logs` table for state transitions. |
@@ -364,7 +364,7 @@ Use these dependency layers to parallelize work safely without ever getting bloc
 ---
 
 #### `AUT-004` — Server-Side Authorization Policies
-- **Tier:** `V1` · **Status:** `Todo`
+- **Tier:** `V1` · **Status:** `Done`
 - **Depends On:** `AUT-003` (Roles & Permissions schema)
 - **Required By (Unlocks):** `AUT-005`, `AUD-003`, `QAT-001`, `QAT-003`
 - **Objective:** Enforce role-based access control on every backend controller and domain action via Laravel Policies and Gates.
@@ -374,9 +374,9 @@ Use these dependency layers to parallelize work safely without ever getting bloc
   - Register `Gate::before(fn (User $user) => $user->hasRole('admin') ? true : null)` in `AppServiceProvider` so Administrators pass all authorization checks cleanly.
   - Unauthorized actions must return `403 Forbidden` with `{ "message": "You do not have permission to perform this action." }`.
 - **Acceptance Criteria:**
-  - [ ] Every controller method calls `$this->authorize(...)` or `Gate::authorize(...)`.
-  - [ ] A `sales_operator` attempting `POST /api/v1/stock-adjustments` or `DELETE /api/v1/products/{id}` receives `403 Forbidden`.
-  - [ ] A `warehouse_operator` attempting `POST /api/v1/sales-orders` or `POST /api/v1/users` receives `403 Forbidden`.
+  - [x] Every controller method calls `$this->authorize(...)` or `Gate::authorize(...)`.
+  - [x] A `sales_operator` attempting `POST /api/v1/stock-adjustments` or `DELETE /api/v1/products/{id}` receives `403 Forbidden`.
+  - [x] A `warehouse_operator` attempting `POST /api/v1/sales-orders` or `POST /api/v1/users` receives `403 Forbidden`.
 
 ---
 

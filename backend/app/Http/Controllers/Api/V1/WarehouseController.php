@@ -14,6 +14,8 @@ class WarehouseController extends Controller
      */
     public function index(): JsonResponse
     {
+        $this->authorize('viewAny', Warehouse::class);
+
         $warehouses = Warehouse::all();
         return response()->json(['data' => $warehouses]);
     }
@@ -23,17 +25,19 @@ class WarehouseController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
+        $this->authorize('create', Warehouse::class);
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'location' => 'nullable|string|max:255',
-            'is_active' => 'boolean'
+            'is_active' => 'boolean',
         ]);
 
         $warehouse = Warehouse::create($validated);
 
         return response()->json([
             'message' => 'Warehouse created successfully',
-            'data' => $warehouse
+            'data' => $warehouse,
         ], 201);
     }
 
@@ -42,6 +46,8 @@ class WarehouseController extends Controller
      */
     public function show(Warehouse $warehouse): JsonResponse
     {
+        $this->authorize('view', $warehouse);
+
         return response()->json(['data' => $warehouse]);
     }
 
@@ -50,17 +56,19 @@ class WarehouseController extends Controller
      */
     public function update(Request $request, Warehouse $warehouse): JsonResponse
     {
+        $this->authorize('update', $warehouse);
+
         $validated = $request->validate([
             'name' => 'sometimes|string|max:255',
             'location' => 'nullable|string|max:255',
-            'is_active' => 'boolean'
+            'is_active' => 'boolean',
         ]);
 
         $warehouse->update($validated);
 
         return response()->json([
             'message' => 'Warehouse updated successfully',
-            'data' => $warehouse
+            'data' => $warehouse,
         ]);
     }
 
@@ -69,10 +77,12 @@ class WarehouseController extends Controller
      */
     public function destroy(Warehouse $warehouse): JsonResponse
     {
+        $this->authorize('delete', $warehouse);
+
         $warehouse->delete();
 
         return response()->json([
-            'message' => 'Warehouse deleted successfully'
+            'message' => 'Warehouse deleted successfully',
         ]);
     }
 }
