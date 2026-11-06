@@ -1,12 +1,8 @@
-import './App.css'
-import ProductList from './features/products/ProductList'
+import { RouterProvider } from 'react-router-dom';
+import { router } from './app/router';
 
 function App() {
-  return (
-    <div className='min-h-screen bg-gray-50'>
-      <ProductList/>
-    </div>
-  )
+  return <RouterProvider router={router} />;
 }
 
-export default App
+export default App;

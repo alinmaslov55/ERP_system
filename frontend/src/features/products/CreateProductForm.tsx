@@ -1,6 +1,7 @@
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import axios from "../../lib/axios";
+import { isAxiosError } from "axios";
 
 interface ProductFormData{
     category_id: number;
@@ -29,8 +30,12 @@ export default function CreateProductForm(){
             reset();
             alert('Product created successfully!');
         },
-        onError: (error: any) => {
-            alert(error.response?.data?.message || 'Error creating product');
+        onError: (error: unknown) => {
+            if (isAxiosError<{ message?: string }>(error)) {
+                alert(error.response?.data?.message || 'Error creating product');
+            } else {
+                alert('Error creating product');
+            }
         }
     });
 

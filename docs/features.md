@@ -154,7 +154,7 @@ Every feature below lists its **Hard Prerequisites (`Depends On`)**, the **Downs
 | [`RPT-003`](#rpt-003--purchasing--stock-movement-reports) | Purchasing & Stock Movement Reports | V1 | `Todo` | `PUR-004`, `INV-004`, `UIX-002` | `RPT-004` | Aggregates supplier PO spend and opening/closing movement ledgers. |
 | [`RPT-004`](#rpt-004--csv-export--bulk-csv-import) | CSV Export & Bulk CSV Import | V2 | `Todo` | `RPT-001`, `RPT-002`, `RPT-003`, `PRD-003` | `RPT-005` | Streams report queries to CSV and imports product CSV rows. |
 | [`RPT-005`](#rpt-005--queued-background-report-generation) | Queued Background Report Generation | V3 | `Todo` | `RPT-004`, `OPS-001` | *Leaf Feature* | Dispatches heavy CSV/PDF generation to Redis queue worker (`OPS-001`). |
-| [`UIX-001`](#uix-001--b2b-application-layout--router-navigation) | B2B Application Layout & Router Navigation | V1 | `Todo` | *None (Root)* | `AUT-002`, `PRD-002`, `WHS-002`, `UIX-002` | Root `React Router` shell & sidebar hosting all feature pages. |
+| [`UIX-001`](#uix-001--b2b-application-layout--router-navigation) | B2B Application Layout & Router Navigation | V1 | `Done` | *None (Root)* | `AUT-002`, `PRD-002`, `WHS-002`, `UIX-002` | Root `React Router` shell & sidebar hosting all feature pages. |
 | [`UIX-002`](#uix-002--reusable-data-table--ui-component-kit) | Reusable Data-Table & UI Component Kit | V1 | `Todo` | `UIX-001` | `UIX-003`, `PRD-002`, `PRD-004`, `WHS-002`, `INV-004`, `PUR-001`, `PUR-005`, `SAL-001`, `RPT-001`–`003`, `AUT-005`, `AUD-003`, `QAT-002` | Shared `<DataTable>`, `<Modal>`, `<Badge>`, and `<Toast>` primitives. |
 | [`UIX-003`](#uix-003--zod-form-validation--resilient-ui-states) | Zod Form Validation & Resilient UI States | V1 | `Partial` | `UIX-002` | `PRD-003`, `INV-003`, `PUR-005`, `QAT-002` | Provides Zod + server `422` field error mapper for all ERP forms. |
 | [`ARC-001`](#arc-001--form-requests-api-resources--pagination-standard) | Form Requests, API Resources & Pagination Standard | V1 | `Todo` | *None (Root)* | `PRD-004`, `INV-003`, `PUR-001`, `SAL-001`, `ARC-003`, `OPS-004` | Establishes uniform JSON pagination & error envelopes across `/api/v1`. |
@@ -1230,7 +1230,7 @@ Use these dependency layers to parallelize work safely without ever getting bloc
 ---
 
 #### `UIX-001` — B2B Application Layout & Router Navigation
-- **Tier:** `V1` · **Status:** `Todo`
+- **Tier:** `V1` · **Status:** `Done`
 - **Depends On:** *None (Layer 0 Root — `react-router-dom` installed)*
 - **Required By (Unlocks):** `AUT-002`, `PRD-002`, `WHS-002`, `UIX-002` (and all routed feature pages)
 - **Objective:** Replace the single-screen `<ProductList />` root in `frontend/src/App.tsx` with a cohesive B2B application shell, collapsible sidebar, top bar, and nested `React Router` route tree.
@@ -1256,8 +1256,8 @@ Use these dependency layers to parallelize work safely without ever getting bloc
 - **Design System Guidelines:**
   - Neutral slate/gray surface hierarchy (`bg-slate-50` canvas, `bg-white` cards with subtle `border-slate-200`), restrained blue/teal primary actions, high-contrast typography, responsive mobile drawer sidebar (`< 1024px`), and header user menu showing active Role badge.
 - **Acceptance Criteria:**
-  - [ ] Active sidebar navigation item highlights based on current route; unauthorized sections (`Administration` for non-admins) are hidden cleanly.
-  - [ ] Layout works seamlessly on both desktop (`1440px+`) and tablet/mobile (`375px+`) viewports.
+  - [x] Active sidebar navigation item highlights based on current route; unauthorized sections (`Administration` for non-admins) are hidden cleanly.
+  - [x] Layout works seamlessly on both desktop (`1440px+`) and tablet/mobile (`375px+`) viewports.
 
 ---
 
