@@ -1,4 +1,5 @@
 import Axios from "axios";
+import { queryClient } from "./queryClient";
 
 // When running in development, relative URLs route through Vite's local proxy (/api and /sanctum),
 // keeping everything on the same origin (localhost:5173). This completely eliminates
@@ -26,6 +27,31 @@ axios.interceptors.request.use((config) => {
     }
     return config;
 });
+
+// Global response interceptor for 401 Unauthorized handling
+axios.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error?.response?.status === 401) {
+            const url = error.config?.url || '';
+            const isAuthEndpoint =
+                url.includes('/login') ||
+                url.includes('/me') ||
+                url.includes('/sanctum/csrf-cookie');
+
+            if (!isAuthEndpoint && typeof window !== 'undefined') {
+                queryClient.setQueryData(['auth', 'me'], null);
+                const currentPath = window.location.pathname;
+                if (currentPath !== '/login') {
+                    const search = window.location.search;
+                    const redirectParam = encodeURIComponent(currentPath + search);
+                    window.location.href = `/login?redirect=${redirectParam}`;
+                }
+            }
+        }
+        return Promise.reject(error);
+    }
+);
 
 // Helper to fetch the Sanctum CSRF cookie
 export const getCsrfCookie = async () => {

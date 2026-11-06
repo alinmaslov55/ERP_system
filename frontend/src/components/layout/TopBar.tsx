@@ -9,6 +9,7 @@ import {
   User,
   Shield,
   CheckCircle2,
+  Loader2,
 } from 'lucide-react';
 
 interface TopBarProps {
@@ -16,6 +17,8 @@ interface TopBarProps {
   userName?: string;
   userEmail?: string;
   userRole?: string;
+  onSignOut?: () => Promise<void> | void;
+  isSigningOut?: boolean;
 }
 
 export const TopBar: React.FC<TopBarProps> = ({
@@ -23,6 +26,8 @@ export const TopBar: React.FC<TopBarProps> = ({
   userName = 'Admin User',
   userEmail = 'admin@stockpilot.io',
   userRole = 'admin',
+  onSignOut,
+  isSigningOut = false,
 }) => {
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -39,9 +44,13 @@ export const TopBar: React.FC<TopBarProps> = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleSignOut = () => {
+  const handleSignOut = async () => {
     setProfileDropdownOpen(false);
-    navigate('/login');
+    if (onSignOut) {
+      await onSignOut();
+    } else {
+      navigate('/login');
+    }
   };
 
   const getRoleBadgeColor = (role: string) => {
@@ -169,11 +178,16 @@ export const TopBar: React.FC<TopBarProps> = ({
               <div className="border-t border-slate-100 py-1">
                 <button
                   type="button"
+                  disabled={isSigningOut}
                   onClick={handleSignOut}
-                  className="flex w-full items-center gap-2.5 px-4 py-2 text-xs font-medium text-red-600 hover:bg-red-50 transition-colors"
+                  className="flex w-full items-center gap-2.5 px-4 py-2 text-xs font-medium text-red-600 hover:bg-red-50 transition-colors disabled:opacity-50"
                 >
-                  <LogOut className="h-4 w-4 text-red-500" />
-                  <span>Sign Out</span>
+                  {isSigningOut ? (
+                    <Loader2 className="h-4 w-4 animate-spin text-red-500" />
+                  ) : (
+                    <LogOut className="h-4 w-4 text-red-500" />
+                  )}
+                  <span>{isSigningOut ? 'Signing Out...' : 'Sign Out'}</span>
                 </button>
               </div>
             </div>

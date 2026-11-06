@@ -1,48 +1,48 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams, Navigate } from 'react-router-dom';
 import { Boxes, Lock, Mail, ArrowRight, ShieldCheck, AlertCircle, Loader2 } from 'lucide-react';
-import { useQueryClient } from '@tanstack/react-query';
-import axios, { getCsrfCookie } from '../../lib/axios';
 import { isAxiosError } from 'axios';
+import { useAuth } from './useAuth';
 
 export const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('admin@stockpilot.io');
   const [password, setPassword] = useState('password123');
   const [remember, setRemember] = useState(true);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
+  const [searchParams] = useSearchParams();
+  const redirectTarget = searchParams.get('redirect') || '/';
+
+  const { isAuthenticated, isLoading, isLoggingIn, login } = useAuth();
+
+  // If already authenticated, redirect to destination immediately
+  if (!isLoading && isAuthenticated) {
+    return <Navigate to={redirectTarget} replace />;
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
     setErrorMessage(null);
 
     try {
-      // 1. Fetch CSRF cookie from Sanctum
-      await getCsrfCookie();
-
-      // 2. Authenticate
-      await axios.post('/login', {
+      await login({
         email,
         password,
         remember,
       });
 
-      // 3. Clear queries and navigate
-      await queryClient.invalidateQueries();
-      navigate('/inventory/products');
+      navigate(redirectTarget, { replace: true });
     } catch (err: unknown) {
       if (isAxiosError<{ message?: string; errors?: Record<string, string[]> }>(err)) {
-        const serverMsg = err.response?.data?.message || err.response?.data?.errors?.email?.[0];
+        const serverMsg =
+          err.response?.data?.message ||
+          err.response?.data?.errors?.email?.[0] ||
+          err.response?.data?.errors?.password?.[0];
         setErrorMessage(serverMsg || 'Failed to authenticate. Please check your credentials.');
       } else {
         setErrorMessage('Cannot connect to backend server. Make sure PHP server is running.');
       }
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -122,10 +122,10 @@ export const LoginPage: React.FC = () => {
 
             <button
               type="submit"
-              disabled={isSubmitting}
+              disabled={isLoggingIn || isLoading}
               className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50"
             >
-              {isSubmitting ? (
+              {isLoggingIn ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin" />
                   <span>Signing In...</span>

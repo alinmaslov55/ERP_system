@@ -106,7 +106,7 @@ Every feature below lists its **Hard Prerequisites (`Depends On`)**, the **Downs
 | Code | Feature Title | Tier | Status | Depends On (Prerequisites) | Required By (Unlocks Downstream) | Dependency Rationale |
 |---|---|---|---|---|---|---|
 | [`AUT-001`](#aut-001--spa-cookie-authentication-api) | SPA Cookie Authentication API | V1 | `Done` | *None (Root)* | `AUT-002`, `AUT-003`, `AUD-001`, `AUD-002`, `INV-001`, `PUR-001`, `SAL-001`, `ARC-003` | Provides `auth:sanctum` session guard & `auth()->id()` actor identity. |
-| [`AUT-002`](#aut-002--frontend-login--session-guard) | Frontend Login & Session Guard | V1 | `Todo` | `AUT-001`, `UIX-001` | `AUT-005`, `DSH-001`, `QAT-002`, `QAT-003` | Hydrates `['auth', 'me']` user context & wraps private routes in `AppShell`. |
+| [`AUT-002`](#aut-002--frontend-login--session-guard) | Frontend Login & Session Guard | V1 | `Done` | `AUT-001`, `UIX-001` | `AUT-005`, `DSH-001`, `QAT-002`, `QAT-003` | Hydrates `['auth', 'me']` user context & wraps private routes in `AppShell`. |
 | [`AUT-003`](#aut-003--roles--permissions-schema) | Roles & Permissions Schema | V1 | `Todo` | `AUT-001` | `AUT-004`, `OPS-002` | Defines `roles` & `permissions` tables needed by Policies and Demo Seeders. |
 | [`AUT-004`](#aut-004--server-side-authorization-policies) | Server-Side Authorization Policies | V1 | `Todo` | `AUT-003` | `AUT-005`, `QAT-001`, `QAT-003` | Enforces `$this->authorize()` gates across all `/api/v1/*` controllers. |
 | [`AUT-005`](#aut-005--user--role-administration-ui) | User & Role Administration UI | V1 | `Todo` | `AUT-002`, `AUT-004`, `UIX-002` | `QAT-002` | Requires auth session, server RBAC policies, and `<Can>` UI permission helper. |
@@ -324,7 +324,7 @@ Use these dependency layers to parallelize work safely without ever getting bloc
 ---
 
 #### `AUT-002` — Frontend Login & Session Guard
-- **Tier:** `V1` · **Status:** `Todo`
+- **Tier:** `V1` · **Status:** `Done`
 - **Depends On:** `AUT-001` (Auth API), `UIX-001` (Router Shell)
 - **Required By (Unlocks):** `AUT-005`, `DSH-001`, `QAT-002`, `QAT-003`
 - **Objective:** Provide a clean B2B Login screen, hydrate current user state on app boot, protect private routes, and handle `401` session expiration gracefully.
@@ -337,9 +337,9 @@ Use these dependency layers to parallelize work safely without ever getting bloc
   - Add a response interceptor in `frontend/src/lib/axios.ts`: on `401 Unauthorized` (outside `/login` and `/me`), clear query cache and redirect to `/login`.
   - `ProtectedRoute` renders a centered loading skeleton while `['auth', 'me']` is loading, redirects unauthenticated users to `/login?redirect=...`, and renders `<Outlet />` when authenticated.
 - **Acceptance Criteria:**
-  - [ ] Visiting any ERP route while logged out redirects to `/login`.
-  - [ ] Submitting valid credentials navigates to `/` (Dashboard) or the `redirect` query target.
-  - [ ] Clicking "Sign Out" in the header calls `/api/v1/logout`, clears TanStack Query cache, and returns to `/login`.
+  - [x] Visiting any ERP route while logged out redirects to `/login`.
+  - [x] Submitting valid credentials navigates to `/` (Dashboard) or the `redirect` query target.
+  - [x] Clicking "Sign Out" in the header calls `/api/v1/logout`, clears TanStack Query cache, and returns to `/login`.
 
 ---
 
