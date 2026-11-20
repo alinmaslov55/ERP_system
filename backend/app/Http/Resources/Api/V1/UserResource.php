@@ -21,9 +21,15 @@ class UserResource extends JsonResource
             'is_active' => (bool) $this->is_active,
             'last_login_at' => $this->last_login_at?->toISOString(),
             'roles' => $this->whenLoaded('roles', fn () => $this->roles->pluck('slug'), []),
+            'role_ids' => $this->whenLoaded('roles', fn () => $this->roles->pluck('id'), []),
+            'role_details' => $this->whenLoaded('roles', fn () => $this->roles->map(fn ($r) => [
+                'id' => $r->id,
+                'name' => $r->name,
+                'slug' => $r->slug,
+                'description' => $r->description,
+            ]), []),
             'permissions' => method_exists($this->resource, 'allPermissions') ? $this->allPermissions() : [],
             'created_at' => $this->created_at?->toISOString(),
         ];
     }
 }
-

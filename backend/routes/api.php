@@ -19,8 +19,10 @@ Route::prefix('v1')->group(function () {
         Route::apiResource('categories', CategoryController::class);
         Route::apiResource('warehouses', WarehouseController::class);
         Route::apiResource('products', ProductController::class);
+        Route::apiResource('users', \App\Http\Controllers\Api\V1\UserController::class);
+        Route::get('/roles', [\App\Http\Controllers\Api\V1\RoleController::class, 'index']);
 
-        // Domain operation routes guarded by RBAC permissions (expanded in INV-003, SAL-002, AUT-005)
+        // Domain operation routes guarded by RBAC permissions (expanded in INV-003, SAL-002)
         Route::post('/stock-adjustments', function () {
             Gate::authorize('inventory.adjust');
             return response()->json(['message' => 'Stock adjustment authorized']);
@@ -29,11 +31,6 @@ Route::prefix('v1')->group(function () {
         Route::post('/sales-orders', function () {
             Gate::authorize('so.manage');
             return response()->json(['message' => 'Sales order authorized']);
-        });
-
-        Route::post('/users', function () {
-            Gate::authorize('users.manage');
-            return response()->json(['message' => 'User management authorized']);
         });
     });
 });

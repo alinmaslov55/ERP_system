@@ -59,21 +59,21 @@ export const useAuth = () => {
     },
   });
 
-  // Determine active role slug.
-  // Until AUT-003 assigns roles in the database, fallback to 'admin' for the default admin account.
-  const userRole: RoleSlug =
-    user?.roles?.[0] || (user ? 'admin' : '');
+  // Evaluate roles
+  const userRoles = user?.roles || [];
+  const isAdmin = userRoles.includes('admin');
+  const userRole: RoleSlug = userRoles[0] || (user ? 'staff' : '');
 
   const hasRole = (allowedRoles: RoleSlug[]): boolean => {
     if (!user) return false;
-    if (userRole === 'admin') return true;
-    return allowedRoles.includes(userRole);
+    if (isAdmin) return true;
+    return userRoles.some((r) => allowedRoles.includes(r));
   };
 
   const hasPermission = (permission: string): boolean => {
     if (!user) return false;
-    if (userRole === 'admin') return true;
-    return user.permissions.includes(permission);
+    if (isAdmin) return true;
+    return user.permissions?.includes(permission) ?? false;
   };
 
   return {
@@ -82,6 +82,8 @@ export const useAuth = () => {
     isFetching,
     isAuthenticated: !!user,
     userRole,
+    userRoles,
+    isAdmin,
     error,
     login: loginMutation.mutateAsync,
     logout: logoutMutation.mutateAsync,
@@ -95,4 +97,3 @@ export const useAuth = () => {
 };
 
 export default useAuth;
-

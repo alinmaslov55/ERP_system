@@ -11,6 +11,7 @@ import { Badge } from '../../components/ui/Badge';
 import { Modal } from '../../components/ui/Modal';
 import { ConfirmDialog } from '../../components/ui/ConfirmDialog';
 import { useToast } from '../../components/ui/Toast';
+import { Can } from '../auth/Can';
 
 export interface Product {
   id: number;
@@ -136,13 +137,15 @@ export default function ProductList() {
       header: 'Actions',
       align: 'right',
       cell: (product) => (
-        <button
-          type="button"
-          onClick={() => setProductToArchive(product)}
-          className="text-xs font-semibold text-red-600 hover:text-red-800 hover:underline transition-colors focus:outline-none"
-        >
-          Archive
-        </button>
+        <Can permission="products.manage">
+          <button
+            type="button"
+            onClick={() => setProductToArchive(product)}
+            className="text-xs font-semibold text-red-600 hover:text-red-800 hover:underline transition-colors focus:outline-none"
+          >
+            Archive
+          </button>
+        </Can>
       ),
     },
   ];
@@ -226,14 +229,16 @@ export default function ProductList() {
         searchPlaceholder="Filter by SKU or name..."
         onClearFilters={() => setSearchTerm('')}
         actionsSlot={
-          <button
-            type="button"
-            onClick={() => setIsCreateModalOpen(true)}
-            className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-3.5 py-2 text-xs font-semibold text-white shadow-xs hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <Plus className="h-4 w-4" />
-            <span>Add Product</span>
-          </button>
+          <Can permission="products.manage">
+            <button
+              type="button"
+              onClick={() => setIsCreateModalOpen(true)}
+              className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-3.5 py-2 text-xs font-semibold text-white shadow-xs hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <Plus className="h-4 w-4" />
+              <span>Add Product</span>
+            </button>
+          </Can>
         }
       />
 
@@ -259,14 +264,16 @@ export default function ProductList() {
               Clear search filter
             </button>
           ) : (
-            <button
-              type="button"
-              onClick={() => setIsCreateModalOpen(true)}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white shadow-xs hover:bg-blue-700"
-            >
-              <Plus className="h-3.5 w-3.5" />
-              <span>Add First Product</span>
-            </button>
+            <Can permission="products.manage">
+              <button
+                type="button"
+                onClick={() => setIsCreateModalOpen(true)}
+                className="inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white shadow-xs hover:bg-blue-700"
+              >
+                <Plus className="h-3.5 w-3.5" />
+                <span>Add First Product</span>
+              </button>
+            </Can>
           )
         }
       />

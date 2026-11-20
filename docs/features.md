@@ -109,7 +109,7 @@ Every feature below lists its **Hard Prerequisites (`Depends On`)**, the **Downs
 | [`AUT-002`](#aut-002--frontend-login--session-guard) | Frontend Login & Session Guard | V1 | `Done` | `AUT-001`, `UIX-001` | `AUT-005`, `DSH-001`, `QAT-002`, `QAT-003` | Hydrates `['auth', 'me']` user context & wraps private routes in `AppShell`. |
 | [`AUT-003`](#aut-003--roles--permissions-schema) | Roles & Permissions Schema | V1 | `Done` | `AUT-001` | `AUT-004`, `OPS-002` | Defines `roles` & `permissions` tables needed by Policies and Demo Seeders. |
 | [`AUT-004`](#aut-004--server-side-authorization-policies) | Server-Side Authorization Policies | V1 | `Done` | `AUT-003` | `AUT-005`, `QAT-001`, `QAT-003` | Enforces `$this->authorize()` gates across all `/api/v1/*` controllers. |
-| [`AUT-005`](#aut-005--user--role-administration-ui) | User & Role Administration UI | V1 | `Todo` | `AUT-002`, `AUT-004`, `UIX-002` | `QAT-002` | Requires auth session, server RBAC policies, and `<Can>` UI permission helper. |
+| [`AUT-005`](#aut-005--user--role-administration-ui) | User & Role Administration UI | V1 | `Done` | `AUT-002`, `AUT-004`, `UIX-002` | `QAT-002` | Requires auth session, server RBAC policies, and `<Can>` UI permission helper. |
 | [`AUD-001`](#aud-001--transaction-actor-attribution) | Transaction Actor Attribution | V1 | `Todo` | `AUT-001` | `INV-002`, `PUR-002`, `PUR-004`, `SAL-002`, `SAL-004`, `SAL-006` | Supplies `performed_by` / `created_by` / `received_by` FK to `users.id`. |
 | [`AUD-002`](#aud-002--core-audit-log-recording) | Core Audit Log Recording | V1 | `Todo` | `AUT-001` | `AUD-003`, `PUR-003`, `PUR-006`, `SAL-005` | Provides `AuditLogger` service & `audit_logs` table for state transitions. |
 | [`AUD-003`](#aud-003--advanced-audit-trail-explorer) | Advanced Audit Trail Explorer | V2 | `Todo` | `AUD-002`, `AUT-004`, `UIX-002` | *Leaf Feature* | Queries `audit_logs` via `DataTable` with `audit.view` policy check. |
@@ -381,7 +381,7 @@ Use these dependency layers to parallelize work safely without ever getting bloc
 ---
 
 #### `AUT-005` — User & Role Administration UI
-- **Tier:** `V1` · **Status:** `Todo`
+- **Tier:** `V1` · **Status:** `Done`
 - **Depends On:** `AUT-002` (Frontend session), `AUT-004` (Server policies), `UIX-002` (`DataTable` & `Modal`)
 - **Required By (Unlocks):** `QAT-002` (Role-visibility frontend tests)
 - **Objective:** Allow Administrators to create, update, assign roles to, and deactivate ERP staff accounts, while hiding unauthorized UI controls across the frontend.
@@ -396,8 +396,8 @@ Use these dependency layers to parallelize work safely without ever getting bloc
   - `frontend/src/features/admin/UsersPage.tsx` (`/admin/users`)
   - `<Can permission="products.manage">` helper component / `usePermission()` hook to conditionally render action buttons (`Create`, `Archive`, `Receive`, `Fulfill`).
 - **Acceptance Criteria:**
-  - [ ] Admin can create a Warehouse Operator user, log in as that user, and see only permitted navigation items and action buttons.
-  - [ ] Self-deactivation or removing the sole active Admin is blocked by the API.
+  - [x] Admin can create a Warehouse Operator user, log in as that user, and see only permitted navigation items and action buttons.
+  - [x] Self-deactivation or removing the sole active Admin is blocked by the API.
 
 ---
 

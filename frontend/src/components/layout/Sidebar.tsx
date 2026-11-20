@@ -9,6 +9,8 @@ import {
 } from 'lucide-react';
 import { navigationConfig, type NavItem } from './navigationConfig';
 
+import { useAuth } from '../../features/auth/useAuth';
+
 interface SidebarProps {
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
@@ -24,9 +26,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
   setIsCollapsed,
   userRole = 'admin',
 }) => {
+  const { hasPermission, hasRole, isAdmin } = useAuth();
+
   const isItemVisible = (item: NavItem) => {
-    if (!item.requiredRole) return true;
-    return item.requiredRole === userRole || userRole === 'admin';
+    if (isAdmin || userRole === 'admin') return true;
+    if (item.requiredPermission && !hasPermission(item.requiredPermission)) {
+      return false;
+    }
+    if (item.requiredRole && !hasRole([item.requiredRole])) {
+      return false;
+    }
+    return true;
   };
 
   const navContent = (
@@ -62,8 +72,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* Navigation Groups */}
       <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-6">
         {navigationConfig.map((group) => {
-          if (group.requiredRole && group.requiredRole !== userRole && userRole !== 'admin') {
-            return null;
+          if (!isAdmin && userRole !== 'admin') {
+            if (group.requiredPermission && !hasPermission(group.requiredPermission)) {
+              return null;
+            }
+            if (group.requiredRole && !hasRole([group.requiredRole])) {
+              return null;
+            }
           }
 
           const visibleItems = group.items.filter(isItemVisible);

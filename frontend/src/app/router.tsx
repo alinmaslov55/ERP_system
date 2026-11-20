@@ -3,6 +3,7 @@ import AppShell from '../components/layout/AppShell';
 import ProtectedRoute from '../components/layout/ProtectedRoute';
 import DashboardPage from '../features/dashboard/DashboardPage';
 import ProductList from '../features/products/ProductList';
+import UsersPage from '../features/admin/UsersPage';
 import LoginPage from '../features/auth/LoginPage';
 import PlaceholderPage from '../components/common/PlaceholderPage';
 import NotFoundPage from '../components/common/NotFoundPage';
@@ -237,14 +238,7 @@ export const router = createBrowserRouter([
       // Administration Module
       {
         path: 'admin/users',
-        element: (
-          <PlaceholderPage
-            code="AUT-005"
-            title="User Administration"
-            category="Administration"
-            description="User accounts, active role assignments, and permission overrides."
-          />
-        ),
+        element: <UsersPage />,
       },
       {
         path: 'admin/audit-logs',
