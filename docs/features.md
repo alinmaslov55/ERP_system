@@ -110,7 +110,7 @@ Every feature below lists its **Hard Prerequisites (`Depends On`)**, the **Downs
 | [`AUT-003`](#aut-003--roles--permissions-schema) | Roles & Permissions Schema | V1 | `Done` | `AUT-001` | `AUT-004`, `OPS-002` | Defines `roles` & `permissions` tables needed by Policies and Demo Seeders. |
 | [`AUT-004`](#aut-004--server-side-authorization-policies) | Server-Side Authorization Policies | V1 | `Done` | `AUT-003` | `AUT-005`, `QAT-001`, `QAT-003` | Enforces `$this->authorize()` gates across all `/api/v1/*` controllers. |
 | [`AUT-005`](#aut-005--user--role-administration-ui) | User & Role Administration UI | V1 | `Done` | `AUT-002`, `AUT-004`, `UIX-002` | `QAT-002` | Requires auth session, server RBAC policies, and `<Can>` UI permission helper. |
-| [`AUD-001`](#aud-001--transaction-actor-attribution) | Transaction Actor Attribution | V1 | `Todo` | `AUT-001` | `INV-002`, `PUR-002`, `PUR-004`, `SAL-002`, `SAL-004`, `SAL-006` | Supplies `performed_by` / `created_by` / `received_by` FK to `users.id`. |
+| [`AUD-001`](#aud-001--transaction-actor-attribution) | Transaction Actor Attribution | V1 | `Done` | `AUT-001` | `INV-002`, `PUR-002`, `PUR-004`, `SAL-002`, `SAL-004`, `SAL-006` | Supplies `performed_by` / `created_by` / `received_by` FK to `users.id`. |
 | [`AUD-002`](#aud-002--core-audit-log-recording) | Core Audit Log Recording | V1 | `Todo` | `AUT-001` | `AUD-003`, `PUR-003`, `PUR-006`, `SAL-005` | Provides `AuditLogger` service & `audit_logs` table for state transitions. |
 | [`AUD-003`](#aud-003--advanced-audit-trail-explorer) | Advanced Audit Trail Explorer | V2 | `Todo` | `AUD-002`, `AUT-004`, `UIX-002` | *Leaf Feature* | Queries `audit_logs` via `DataTable` with `audit.view` policy check. |
 | [`PRD-001`](#prd-001--category-crud-api--seeder) | Category CRUD API & Seeder | V1 | `Done` | *None (Root)* | `PRD-002`, `PRD-003` | `products.category_id` FK depends on `categories.id`. |
@@ -406,7 +406,7 @@ Use these dependency layers to parallelize work safely without ever getting bloc
 ---
 
 #### `AUD-001` — Transaction Actor Attribution
-- **Tier:** `V1` · **Status:** `Todo`
+- **Tier:** `V1` · **Status:** `Done`
 - **Depends On:** `AUT-001` (Authenticated user context)
 - **Required By (Unlocks):** `INV-002`, `INV-006`, `PUR-002`, `PUR-004`, `SAL-002`, `SAL-004`, `SAL-006`
 - **Objective:** Guarantee every operational document and stock change records the exact user who executed each lifecycle step.
@@ -420,7 +420,7 @@ Use these dependency layers to parallelize work safely without ever getting bloc
 - **Business Rules:**
   - Actor IDs are **always** resolved server-side via `$request->user()->id` inside the service layer—never accepted from client request payloads.
 - **Acceptance Criteria:**
-  - [ ] API responses for movements, POs, receipts, SOs, shipments, and payments include actor summary `{ "id": ..., "name": "..." }`.
+  - [x] API responses for movements, POs, receipts, SOs, shipments, and payments include actor summary `{ "id": ..., "name": "..." }`.
 
 ---
 

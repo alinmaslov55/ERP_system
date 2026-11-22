@@ -7,6 +7,11 @@ export interface RoleDetail {
   description?: string;
 }
 
+export interface ActorSummary {
+  id: number;
+  name: string;
+}
+
 export interface User {
   id: number;
   name: string;

@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\Models\User;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Schema\ForeignKeyDefinition;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
@@ -60,5 +62,15 @@ class AppServiceProvider extends ServiceProvider
         foreach ($permissions as $permission) {
             Gate::define($permission, fn (User $user) => $user->hasPermission($permission));
         }
+
+        Blueprint::macro('actor', function (string $column = 'created_by'): ForeignKeyDefinition {
+            /** @var Blueprint $this */
+            return $this->foreignId($column)->constrained('users')->restrictOnDelete();
+        });
+
+        Blueprint::macro('nullableActor', function (string $column): ForeignKeyDefinition {
+            /** @var Blueprint $this */
+            return $this->foreignId($column)->nullable()->constrained('users')->nullOnDelete();
+        });
     }
 }

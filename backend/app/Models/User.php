@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
@@ -113,5 +114,55 @@ class User extends Authenticatable
         if ($roleModel) {
             $this->roles()->detach($roleModel->id);
         }
+    }
+
+    public function stockMovements(): HasMany
+    {
+        return $this->hasMany(StockMovement::class, 'performed_by');
+    }
+
+    public function createdPurchaseOrders(): HasMany
+    {
+        return $this->hasMany(PurchaseOrder::class, 'created_by');
+    }
+
+    public function submittedPurchaseOrders(): HasMany
+    {
+        return $this->hasMany(PurchaseOrder::class, 'submitted_by');
+    }
+
+    public function cancelledPurchaseOrders(): HasMany
+    {
+        return $this->hasMany(PurchaseOrder::class, 'cancelled_by');
+    }
+
+    public function receivedGoodsReceipts(): HasMany
+    {
+        return $this->hasMany(GoodsReceipt::class, 'received_by');
+    }
+
+    public function createdSalesOrders(): HasMany
+    {
+        return $this->hasMany(SalesOrder::class, 'created_by');
+    }
+
+    public function confirmedSalesOrders(): HasMany
+    {
+        return $this->hasMany(SalesOrder::class, 'confirmed_by');
+    }
+
+    public function cancelledSalesOrders(): HasMany
+    {
+        return $this->hasMany(SalesOrder::class, 'cancelled_by');
+    }
+
+    public function fulfilledShipments(): HasMany
+    {
+        return $this->hasMany(Shipment::class, 'fulfilled_by');
+    }
+
+    public function recordedPayments(): HasMany
+    {
+        return $this->hasMany(Payment::class, 'recorded_by');
     }
 }
