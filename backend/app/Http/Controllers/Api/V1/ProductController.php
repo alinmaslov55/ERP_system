@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Product;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -77,7 +78,9 @@ class ProductController extends Controller
             'is_active' => 'boolean',
         ]);
 
-        $product->update($validated);
+        DB::transaction(function () use ($product, $validated) {
+            $product->update($validated);
+        });
 
         return response()->json([
             'message' => 'Product updated successfully',

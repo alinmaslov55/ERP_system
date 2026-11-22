@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PurchaseOrder extends Model
 {
-    use HasFactory, HasActorAttribution;
+    use HasFactory, HasActorAttribution, Auditable;
 
     protected $fillable = [
         'po_number',

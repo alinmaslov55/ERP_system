@@ -111,7 +111,7 @@ Every feature below lists its **Hard Prerequisites (`Depends On`)**, the **Downs
 | [`AUT-004`](#aut-004--server-side-authorization-policies) | Server-Side Authorization Policies | V1 | `Done` | `AUT-003` | `AUT-005`, `QAT-001`, `QAT-003` | Enforces `$this->authorize()` gates across all `/api/v1/*` controllers. |
 | [`AUT-005`](#aut-005--user--role-administration-ui) | User & Role Administration UI | V1 | `Done` | `AUT-002`, `AUT-004`, `UIX-002` | `QAT-002` | Requires auth session, server RBAC policies, and `<Can>` UI permission helper. |
 | [`AUD-001`](#aud-001--transaction-actor-attribution) | Transaction Actor Attribution | V1 | `Done` | `AUT-001` | `INV-002`, `PUR-002`, `PUR-004`, `SAL-002`, `SAL-004`, `SAL-006` | Supplies `performed_by` / `created_by` / `received_by` FK to `users.id`. |
-| [`AUD-002`](#aud-002--core-audit-log-recording) | Core Audit Log Recording | V1 | `Todo` | `AUT-001` | `AUD-003`, `PUR-003`, `PUR-006`, `SAL-005` | Provides `AuditLogger` service & `audit_logs` table for state transitions. |
+| [`AUD-002`](#aud-002--core-audit-log-recording) | Core Audit Log Recording | V1 | `Done` | `AUT-001` | `AUD-003`, `PUR-003`, `PUR-006`, `SAL-005` | Provides `AuditLogger` service & `audit_logs` table for state transitions. |
 | [`AUD-003`](#aud-003--advanced-audit-trail-explorer) | Advanced Audit Trail Explorer | V2 | `Todo` | `AUD-002`, `AUT-004`, `UIX-002` | *Leaf Feature* | Queries `audit_logs` via `DataTable` with `audit.view` policy check. |
 | [`PRD-001`](#prd-001--category-crud-api--seeder) | Category CRUD API & Seeder | V1 | `Done` | *None (Root)* | `PRD-002`, `PRD-003` | `products.category_id` FK depends on `categories.id`. |
 | [`PRD-002`](#prd-002--category-management-ui) | Category Management UI | V1 | `Todo` | `PRD-001`, `UIX-001`, `UIX-002` | `PRD-003` | Manages categories consumed by the Product creation/edit selector. |
@@ -425,7 +425,7 @@ Use these dependency layers to parallelize work safely without ever getting bloc
 ---
 
 #### `AUD-002` — Core Audit Log Recording
-- **Tier:** `V1` · **Status:** `Todo`
+- **Tier:** `V1` · **Status:** `Done`
 - **Depends On:** `AUT-001` (Actor identity)
 - **Required By (Unlocks):** `AUD-003`, `PUR-003`, `PUR-006`, `SAL-005`, `OPS-002`
 - **Objective:** Persist an immutable, append-only audit trail of critical entity creations, state transitions, price/cost changes, and permission changes.
@@ -436,8 +436,8 @@ Use these dependency layers to parallelize work safely without ever getting bloc
   - `AuditLogger` service (`App\Services\AuditLogger::record(...)`) + reusable `Auditable` Eloquent trait for master models (`Product`, `Warehouse`, `Supplier`, `Customer`, `User`), plus explicit service-level audit entries for workflow transitions (`submit`, `receive`, `confirm`, `fulfill`, `cancel`, `adjust`).
   - Redact sensitive attributes (`password`, `remember_token`) from `old_values`/`new_values`.
 - **Acceptance Criteria:**
-  - [ ] Updating a product's `selling_price` or submitting a PO writes an `audit_logs` row within the same DB transaction.
-  - [ ] `AuditLog` model blocks `update()` and `delete()` calls.
+  - [x] Updating a product's `selling_price` or submitting a PO writes an `audit_logs` row within the same DB transaction.
+  - [x] AuditLog model blocks `update()` and `delete()` calls.
 
 ---
 
