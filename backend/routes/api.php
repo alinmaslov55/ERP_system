@@ -21,6 +21,7 @@ Route::prefix('v1')->group(function () {
         Route::apiResource('products', ProductController::class);
         Route::apiResource('users', \App\Http\Controllers\Api\V1\UserController::class);
         Route::get('/roles', [\App\Http\Controllers\Api\V1\RoleController::class, 'index']);
+        Route::get('/audit-logs', [\App\Http\Controllers\Api\V1\AuditLogController::class, 'index']);
 
         // Domain operation routes guarded by RBAC permissions (expanded in INV-003, SAL-002)
         Route::post('/stock-adjustments', function () {

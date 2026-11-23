@@ -4,6 +4,7 @@ import ProtectedRoute from '../components/layout/ProtectedRoute';
 import DashboardPage from '../features/dashboard/DashboardPage';
 import ProductList from '../features/products/ProductList';
 import UsersPage from '../features/admin/UsersPage';
+import AuditLogsPage from '../features/admin/AuditLogsPage';
 import LoginPage from '../features/auth/LoginPage';
 import PlaceholderPage from '../components/common/PlaceholderPage';
 import NotFoundPage from '../components/common/NotFoundPage';
@@ -242,14 +243,7 @@ export const router = createBrowserRouter([
       },
       {
         path: 'admin/audit-logs',
-        element: (
-          <PlaceholderPage
-            code="AUD-003"
-            title="Audit Trail Explorer"
-            category="Administration"
-            description="System-wide audit trail with actor attribution and state transition logs."
-          />
-        ),
+        element: <AuditLogsPage />,
       },
     ],
   },

@@ -112,7 +112,7 @@ Every feature below lists its **Hard Prerequisites (`Depends On`)**, the **Downs
 | [`AUT-005`](#aut-005--user--role-administration-ui) | User & Role Administration UI | V1 | `Done` | `AUT-002`, `AUT-004`, `UIX-002` | `QAT-002` | Requires auth session, server RBAC policies, and `<Can>` UI permission helper. |
 | [`AUD-001`](#aud-001--transaction-actor-attribution) | Transaction Actor Attribution | V1 | `Done` | `AUT-001` | `INV-002`, `PUR-002`, `PUR-004`, `SAL-002`, `SAL-004`, `SAL-006` | Supplies `performed_by` / `created_by` / `received_by` FK to `users.id`. |
 | [`AUD-002`](#aud-002--core-audit-log-recording) | Core Audit Log Recording | V1 | `Done` | `AUT-001` | `AUD-003`, `PUR-003`, `PUR-006`, `SAL-005` | Provides `AuditLogger` service & `audit_logs` table for state transitions. |
-| [`AUD-003`](#aud-003--advanced-audit-trail-explorer) | Advanced Audit Trail Explorer | V2 | `Todo` | `AUD-002`, `AUT-004`, `UIX-002` | *Leaf Feature* | Queries `audit_logs` via `DataTable` with `audit.view` policy check. |
+| [`AUD-003`](#aud-003--advanced-audit-trail-explorer) | Advanced Audit Trail Explorer | V2 | `Done` | `AUD-002`, `AUT-004`, `UIX-002` | *Leaf Feature* | Queries `audit_logs` via `DataTable` with `audit.view` policy check. |
 | [`PRD-001`](#prd-001--category-crud-api--seeder) | Category CRUD API & Seeder | V1 | `Done` | *None (Root)* | `PRD-002`, `PRD-003` | `products.category_id` FK depends on `categories.id`. |
 | [`PRD-002`](#prd-002--category-management-ui) | Category Management UI | V1 | `Todo` | `PRD-001`, `UIX-001`, `UIX-002` | `PRD-003` | Manages categories consumed by the Product creation/edit selector. |
 | [`PRD-003`](#prd-003--core-product-crud--archiving) | Core Product CRUD & Archiving | V1 | `Partial` | `PRD-001`, `PRD-002`, `UIX-003` | `PRD-004`, `PRD-005`, `INV-001`, `INV-005`, `PUR-002`, `SAL-002`, `DSH-001`, `RPT-004` | Core `products` entity referenced by balances, movements, PO lines & SO lines. |
@@ -442,7 +442,7 @@ Use these dependency layers to parallelize work safely without ever getting bloc
 ---
 
 #### `AUD-003` — Advanced Audit Trail Explorer
-- **Tier:** `V2` · **Status:** `Todo`
+- **Tier:** `V2` · **Status:** `Done`
 - **Depends On:** `AUD-002` (`audit_logs` table), `AUT-004` (`audit.view` policy), `UIX-002` (`DataTable`)
 - **Required By (Unlocks):** *None (Leaf Feature)*
 - **Objective:** Provide Administrators and Managers with a searchable UI to inspect system-wide operational history and field-level diffs.
@@ -451,8 +451,8 @@ Use these dependency layers to parallelize work safely without ever getting bloc
 - **Frontend UI (`frontend/src/features/admin/AuditLogsPage.tsx`, route `/admin/audit-logs`):**
   - Paginated table displaying Timestamp, Actor, Action badge, Target Entity (`Product #12`, `PO-2026-0004`), IP address, and an expandable row/drawer showing side-by-side JSON `old_values` → `new_values` diff.
 - **Acceptance Criteria:**
-  - [ ] Filtering by entity type and date range returns accurate paginated logs under 200ms with indexed queries.
-  - [ ] Expanding a log entry clearly highlights modified fields (`selling_price: "120.00" → "135.00"`).
+  - [x] Filtering by entity type and date range returns accurate paginated logs under 200ms with indexed queries.
+  - [x] Expanding a log entry clearly highlights modified fields (`selling_price: "120.00" → "135.00"`).
 
 ---
 
