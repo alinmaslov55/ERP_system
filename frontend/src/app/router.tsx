@@ -3,6 +3,7 @@ import AppShell from '../components/layout/AppShell';
 import ProtectedRoute from '../components/layout/ProtectedRoute';
 import DashboardPage from '../features/dashboard/DashboardPage';
 import ProductList from '../features/products/ProductList';
+import CategoriesPage from '../features/categories/CategoriesPage';
 import UsersPage from '../features/admin/UsersPage';
 import AuditLogsPage from '../features/admin/AuditLogsPage';
 import LoginPage from '../features/auth/LoginPage';
@@ -44,14 +45,7 @@ export const router = createBrowserRouter([
       },
       {
         path: 'inventory/categories',
-        element: (
-          <PlaceholderPage
-            code="PRD-002"
-            title="Categories Management"
-            category="Inventory"
-            description="Manage hierarchy and groupings for catalog SKU classification."
-          />
-        ),
+        element: <CategoriesPage />,
       },
       {
         path: 'inventory/stock-levels',

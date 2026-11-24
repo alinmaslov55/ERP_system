@@ -1,10 +1,11 @@
 import React from 'react';
-import { useQueryClient, useMutation } from '@tanstack/react-query';
+import { useQueryClient, useMutation, useQuery } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import axios from '../../lib/axios';
 import { isAxiosError } from 'axios';
 import { useToast } from '../../components/ui/Toast';
 import { Loader2 } from 'lucide-react';
+import type { Category } from '../categories/types';
 
 interface ProductFormData {
   category_id: number;
@@ -25,6 +26,14 @@ export const CreateProductForm: React.FC<CreateProductFormProps> = ({
 }) => {
   const queryClient = useQueryClient();
   const toast = useToast();
+
+  const { data: categories = [], isLoading: isLoadingCategories } = useQuery<Category[]>({
+    queryKey: ['categories'],
+    queryFn: async () => {
+      const res = await axios.get<{ data: Category[] }>('/categories');
+      return res.data.data;
+    },
+  });
 
   const {
     register,
@@ -71,11 +80,21 @@ export const CreateProductForm: React.FC<CreateProductFormProps> = ({
             Category
           </label>
           <select
-            {...register('category_id')}
-            className="w-full rounded-lg border border-slate-200 bg-white p-2.5 text-xs text-slate-800 shadow-2xs focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
+            {...register('category_id', { valueAsNumber: true })}
+            disabled={isLoadingCategories}
+            className="w-full rounded-lg border border-slate-200 bg-white p-2.5 text-xs text-slate-800 shadow-2xs focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 disabled:bg-slate-50 disabled:text-slate-400"
           >
-            <option value="1">Electronics</option>
-            <option value="2">Office Supplies</option>
+            {categories.length === 0 ? (
+              <option value="">
+                {isLoadingCategories ? 'Loading categories...' : 'No categories available'}
+              </option>
+            ) : (
+              categories.map((cat) => (
+                <option key={cat.id} value={cat.id}>
+                  {cat.name}
+                </option>
+              ))
+            )}
           </select>
         </div>
 

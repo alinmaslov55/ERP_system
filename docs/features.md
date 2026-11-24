@@ -114,7 +114,7 @@ Every feature below lists its **Hard Prerequisites (`Depends On`)**, the **Downs
 | [`AUD-002`](#aud-002--core-audit-log-recording) | Core Audit Log Recording | V1 | `Done` | `AUT-001` | `AUD-003`, `PUR-003`, `PUR-006`, `SAL-005` | Provides `AuditLogger` service & `audit_logs` table for state transitions. |
 | [`AUD-003`](#aud-003--advanced-audit-trail-explorer) | Advanced Audit Trail Explorer | V2 | `Done` | `AUD-002`, `AUT-004`, `UIX-002` | *Leaf Feature* | Queries `audit_logs` via `DataTable` with `audit.view` policy check. |
 | [`PRD-001`](#prd-001--category-crud-api--seeder) | Category CRUD API & Seeder | V1 | `Done` | *None (Root)* | `PRD-002`, `PRD-003` | `products.category_id` FK depends on `categories.id`. |
-| [`PRD-002`](#prd-002--category-management-ui) | Category Management UI | V1 | `Todo` | `PRD-001`, `UIX-001`, `UIX-002` | `PRD-003` | Manages categories consumed by the Product creation/edit selector. |
+| [`PRD-002`](#prd-002--category-management-ui) | Category Management UI | V1 | `Done` | `PRD-001`, `UIX-001`, `UIX-002` | `PRD-003` | Manages categories consumed by the Product creation/edit selector. |
 | [`PRD-003`](#prd-003--core-product-crud--archiving) | Core Product CRUD & Archiving | V1 | `Partial` | `PRD-001`, `PRD-002`, `UIX-003` | `PRD-004`, `PRD-005`, `INV-001`, `INV-005`, `PUR-002`, `SAL-002`, `DSH-001`, `RPT-004` | Core `products` entity referenced by balances, movements, PO lines & SO lines. |
 | [`PRD-004`](#prd-004--product-search-filter-sort--pagination) | Product Search, Filter, Sort & Pagination | V1 | `Todo` | `PRD-003`, `UIX-002`, `ARC-001` | `QAT-001`, `QAT-002` | Uses standardized pagination envelope (`ARC-001`) & `<DataTable>` (`UIX-002`). |
 | [`PRD-005`](#prd-005--extended-product-metadata-barcode--images) | Extended Product Metadata, Barcode & Images | V2 | `Todo` | `PRD-003`, `PUR-001` | `PRD-006` | Links products to `suppliers` (`product_supplier` pivot) & adds `barcode` column. |
@@ -476,7 +476,7 @@ Use these dependency layers to parallelize work safely without ever getting bloc
 ---
 
 #### `PRD-002` — Category Management UI
-- **Tier:** `V1` · **Status:** `Todo`
+- **Tier:** `V1` · **Status:** `Done`
 - **Depends On:** `PRD-001` (Category API), `UIX-001` (AppShell), `UIX-002` (`DataTable` & `Modal`)
 - **Required By (Unlocks):** `PRD-003` (Dynamic category management for products)
 - **Objective:** Enable Managers and Administrators to view, create, rename, and remove product categories from the web interface.
@@ -487,7 +487,7 @@ Use these dependency layers to parallelize work safely without ever getting bloc
   - Table columns: Name, Description, Linked Products (`products_count`), Created Date, Actions (`Edit`, `Delete`).
   - Disable or show tooltip on `Delete` when `products_count > 0`; invalidate `['categories']` and `['products']` queries on mutation success.
 - **Acceptance Criteria:**
-  - [ ] Creating or editing a category immediately updates the Categories list and the Category dropdown in Product forms.
+  - [x] Creating or editing a category immediately updates the Categories list and the Category dropdown in Product forms.
 
 ---
 
