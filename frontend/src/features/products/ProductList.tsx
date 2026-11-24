@@ -2,32 +2,33 @@ import { useState, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { isAxiosError } from 'axios';
-import { AlertCircle, LogIn, RefreshCw, Loader2, Plus, Package } from 'lucide-react';
+import {
+  AlertCircle,
+  LogIn,
+  RefreshCw,
+  Loader2,
+  Plus,
+  Package,
+  Pencil,
+  Trash2,
+  Eye,
+} from 'lucide-react';
 import axios from '../../lib/axios';
-import { CreateProductForm } from './CreateProductForm';
+import { ProductFormModal } from './ProductFormModal';
+import type { Product } from './types';
 import { DataTable, type ColumnDef } from '../../components/data-table/DataTable';
 import { TableToolbar } from '../../components/data-table/TableToolbar';
 import { Badge } from '../../components/ui/Badge';
-import { Modal } from '../../components/ui/Modal';
 import { ConfirmDialog } from '../../components/ui/ConfirmDialog';
 import { useToast } from '../../components/ui/Toast';
 import { Can } from '../auth/Can';
 
-export interface Product {
-  id: number;
-  sku: string;
-  name: string;
-  selling_price: string;
-  is_active: boolean;
-  category?: {
-    id: number;
-    name: string;
-  };
-}
+export type { Product };
 
 export default function ProductList() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isFormModalOpen, setIsFormModalOpen] = useState(false);
+  const [productToEdit, setProductToEdit] = useState<Product | null>(null);
   const [productToArchive, setProductToArchive] = useState<Product | null>(null);
 
   const queryClient = useQueryClient();
@@ -53,6 +54,7 @@ export default function ProductList() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['products'] });
+      queryClient.invalidateQueries({ queryKey: ['categories'] });
       toast.success(
         `Product "${productToArchive?.name}" has been archived.`,
         'Product Archived'
@@ -71,6 +73,16 @@ export default function ProductList() {
     if (productToArchive) {
       deleteMutation.mutate(productToArchive.id);
     }
+  };
+
+  const handleOpenCreate = () => {
+    setProductToEdit(null);
+    setIsFormModalOpen(true);
+  };
+
+  const handleOpenEdit = (product: Product) => {
+    setProductToEdit(product);
+    setIsFormModalOpen(true);
   };
 
   // Filter products by search term client-side
@@ -94,14 +106,33 @@ export default function ProductList() {
       header: 'SKU Code',
       accessorKey: 'sku',
       sortable: true,
-      className: 'font-mono font-bold text-slate-900',
+      cell: (product) => (
+        <Link
+          to={`/inventory/products/${product.id}`}
+          className="font-mono font-bold text-blue-700 hover:text-blue-900 hover:underline"
+        >
+          {product.sku}
+        </Link>
+      ),
     },
     {
       key: 'name',
       header: 'Product Name',
       accessorKey: 'name',
       sortable: true,
-      className: 'font-medium text-slate-800',
+      cell: (product) => (
+        <div>
+          <Link
+            to={`/inventory/products/${product.id}`}
+            className="font-medium text-slate-900 hover:text-blue-700 transition-colors"
+          >
+            {product.name}
+          </Link>
+          <span className="block text-[11px] text-slate-400 capitalize">
+            Unit: {product.unit || 'piece'}
+          </span>
+        </div>
+      ),
     },
     {
       key: 'category',
@@ -113,13 +144,24 @@ export default function ProductList() {
       ),
     },
     {
+      key: 'cost_price',
+      header: 'Cost Price',
+      accessorKey: 'cost_price',
+      sortable: true,
+      cell: (product) => (
+        <span className="font-mono text-xs text-slate-500">
+          ${parseFloat(String(product.cost_price || 0)).toFixed(2)}
+        </span>
+      ),
+    },
+    {
       key: 'selling_price',
       header: 'Selling Price',
       accessorKey: 'selling_price',
       sortable: true,
       cell: (product) => (
         <span className="font-mono font-semibold text-slate-900">
-          ${parseFloat(product.selling_price).toFixed(2)}
+          ${parseFloat(String(product.selling_price || 0)).toFixed(2)}
         </span>
       ),
     },
@@ -137,15 +179,33 @@ export default function ProductList() {
       header: 'Actions',
       align: 'right',
       cell: (product) => (
-        <Can permission="products.manage">
-          <button
-            type="button"
-            onClick={() => setProductToArchive(product)}
-            className="text-xs font-semibold text-red-600 hover:text-red-800 hover:underline transition-colors focus:outline-none"
+        <div className="flex items-center justify-end gap-1.5">
+          <Link
+            to={`/inventory/products/${product.id}`}
+            className="p-1.5 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors"
+            title="View Product Details"
           >
-            Archive
-          </button>
-        </Can>
+            <Eye className="h-4 w-4" />
+          </Link>
+          <Can permission="products.manage">
+            <button
+              type="button"
+              onClick={() => handleOpenEdit(product)}
+              className="p-1.5 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors"
+              title={`Edit ${product.sku}`}
+            >
+              <Pencil className="h-4 w-4" />
+            </button>
+            <button
+              type="button"
+              onClick={() => setProductToArchive(product)}
+              className="p-1.5 text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors"
+              title={`Archive ${product.sku}`}
+            >
+              <Trash2 className="h-4 w-4" />
+            </button>
+          </Can>
+        </div>
       ),
     },
   ];
@@ -232,7 +292,7 @@ export default function ProductList() {
           <Can permission="products.manage">
             <button
               type="button"
-              onClick={() => setIsCreateModalOpen(true)}
+              onClick={handleOpenCreate}
               className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-3.5 py-2 text-xs font-semibold text-white shadow-xs hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <Plus className="h-4 w-4" />
@@ -267,7 +327,7 @@ export default function ProductList() {
             <Can permission="products.manage">
               <button
                 type="button"
-                onClick={() => setIsCreateModalOpen(true)}
+                onClick={handleOpenCreate}
                 className="inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white shadow-xs hover:bg-blue-700"
               >
                 <Plus className="h-3.5 w-3.5" />
@@ -278,19 +338,12 @@ export default function ProductList() {
         }
       />
 
-      {/* Add Product Modal */}
-      <Modal
-        isOpen={isCreateModalOpen}
-        onClose={() => setIsCreateModalOpen(false)}
-        title="Add New Product"
-        description="Fill in the details below to register a new product in the catalog."
-        size="lg"
-      >
-        <CreateProductForm
-          onSuccess={() => setIsCreateModalOpen(false)}
-          onCancel={() => setIsCreateModalOpen(false)}
-        />
-      </Modal>
+      {/* Add / Edit Product Modal */}
+      <ProductFormModal
+        isOpen={isFormModalOpen}
+        onClose={() => setIsFormModalOpen(false)}
+        productToEdit={productToEdit}
+      />
 
       {/* Archive Confirmation Dialog */}
       <ConfirmDialog
@@ -303,7 +356,7 @@ export default function ProductList() {
             Are you sure you want to archive{' '}
             <strong className="text-slate-900 font-semibold">{productToArchive?.name}</strong> (
             <code className="font-mono font-semibold text-slate-800">{productToArchive?.sku}</code>)?
-            This product will be marked inactive and cannot be added to new orders.
+            This product will be soft-deleted and excluded from active catalog operations while preserving historical records.
           </>
         }
         confirmLabel="Archive Product"

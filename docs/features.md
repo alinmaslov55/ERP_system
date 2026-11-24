@@ -115,7 +115,7 @@ Every feature below lists its **Hard Prerequisites (`Depends On`)**, the **Downs
 | [`AUD-003`](#aud-003--advanced-audit-trail-explorer) | Advanced Audit Trail Explorer | V2 | `Done` | `AUD-002`, `AUT-004`, `UIX-002` | *Leaf Feature* | Queries `audit_logs` via `DataTable` with `audit.view` policy check. |
 | [`PRD-001`](#prd-001--category-crud-api--seeder) | Category CRUD API & Seeder | V1 | `Done` | *None (Root)* | `PRD-002`, `PRD-003` | `products.category_id` FK depends on `categories.id`. |
 | [`PRD-002`](#prd-002--category-management-ui) | Category Management UI | V1 | `Done` | `PRD-001`, `UIX-001`, `UIX-002` | `PRD-003` | Manages categories consumed by the Product creation/edit selector. |
-| [`PRD-003`](#prd-003--core-product-crud--archiving) | Core Product CRUD & Archiving | V1 | `Partial` | `PRD-001`, `PRD-002`, `UIX-003` | `PRD-004`, `PRD-005`, `INV-001`, `INV-005`, `PUR-002`, `SAL-002`, `DSH-001`, `RPT-004` | Core `products` entity referenced by balances, movements, PO lines & SO lines. |
+| [`PRD-003`](#prd-003--core-product-crud--archiving) | Core Product CRUD & Archiving | V1 | `Done` | `PRD-001`, `PRD-002`, `UIX-003` | `PRD-004`, `PRD-005`, `INV-001`, `INV-005`, `PUR-002`, `SAL-002`, `DSH-001`, `RPT-004` | Core `products` entity referenced by balances, movements, PO lines & SO lines. |
 | [`PRD-004`](#prd-004--product-search-filter-sort--pagination) | Product Search, Filter, Sort & Pagination | V1 | `Todo` | `PRD-003`, `UIX-002`, `ARC-001` | `QAT-001`, `QAT-002` | Uses standardized pagination envelope (`ARC-001`) & `<DataTable>` (`UIX-002`). |
 | [`PRD-005`](#prd-005--extended-product-metadata-barcode--images) | Extended Product Metadata, Barcode & Images | V2 | `Todo` | `PRD-003`, `PUR-001` | `PRD-006` | Links products to `suppliers` (`product_supplier` pivot) & adds `barcode` column. |
 | [`PRD-006`](#prd-006--barcode-scanning-lookup) | Barcode Scanning Lookup | V3 | `Todo` | `PRD-005`, `PUR-004`, `SAL-004` | *Leaf Feature* | Resolves `products.barcode` during Goods Receipt and Order Fulfillment. |
@@ -492,7 +492,7 @@ Use these dependency layers to parallelize work safely without ever getting bloc
 ---
 
 #### `PRD-003` — Core Product CRUD & Archiving
-- **Tier:** `V1` · **Status:** `Partial`
+- **Tier:** `V1` · **Status:** `Done`
 - **Depends On:** `PRD-001` (`categories` FK), `PRD-002` (Category queries), `UIX-003` (Form validation)
 - **Required By (Unlocks):** `PRD-004`, `PRD-005`, `INV-001`, `INV-005`, `PUR-002`, `SAL-002`, `DSH-001`, `RPT-004`
 - **Objective:** Complete full create, read, update, and soft-delete archiving workflows for catalog items across backend and frontend.
@@ -503,9 +503,9 @@ Use these dependency layers to parallelize work safely without ever getting bloc
   2. **Complete Form Inputs:** Expose `unit` (`piece`, `box`, `kg`, `liter`, `meter`), `cost_price`, `selling_price`, `reorder_level`, `description`, and `is_active` toggle.
   3. **Edit & Detail Views:** Add `Edit` action in `ProductList.tsx` calling `PATCH /api/v1/products/{id}` and a Product Detail page (`/inventory/products/:id`) displaying pricing, category, reorder threshold, and per-warehouse stock breakdown (once `INV-001` is ready).
 - **Acceptance Criteria:**
-  - [ ] All product attributes (`sku`, `name`, `category_id`, `unit`, `cost_price`, `selling_price`, `reorder_level`, `description`, `is_active`) can be created and edited via the UI.
-  - [ ] Duplicate `sku` returns `422` validation error mapped directly onto the `sku` form field.
-  - [ ] Archiving soft-deletes the product (`deleted_at` set) while preserving historical FK references.
+  - [x] All product attributes (`sku`, `name`, `category_id`, `unit`, `cost_price`, `selling_price`, `reorder_level`, `description`, `is_active`) can be created and edited via the UI.
+  - [x] Duplicate `sku` returns `422` validation error mapped directly onto the `sku` form field.
+  - [x] Archiving soft-deletes the product (`deleted_at` set) while preserving historical FK references.
 
 ---
 

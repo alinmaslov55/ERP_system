@@ -7,6 +7,7 @@ use App\Models\Product;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class ProductController extends Controller
 {
@@ -17,7 +18,7 @@ class ProductController extends Controller
     {
         $this->authorize('viewAny', Product::class);
 
-        $products = Product::with('category')->get();
+        $products = Product::with('category')->orderByDesc('id')->get();
         return response()->json(['data' => $products]);
     }
 
@@ -30,10 +31,10 @@ class ProductController extends Controller
 
         $validated = $request->validate([
             'category_id' => 'required|exists:categories,id',
-            'sku' => 'required|string|unique:products,sku',
+            'sku' => 'required|string|max:100|unique:products,sku',
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'unit' => 'nullable|string',
+            'unit' => 'nullable|string|in:piece,box,kg,liter,meter',
             'cost_price' => 'numeric|min:0',
             'selling_price' => 'numeric|min:0',
             'reorder_level' => 'integer|min:0',
@@ -41,6 +42,7 @@ class ProductController extends Controller
         ]);
 
         $product = Product::create($validated);
+        $product->load('category');
 
         return response()->json([
             'message' => 'Product created successfully',
@@ -68,19 +70,26 @@ class ProductController extends Controller
 
         $validated = $request->validate([
             'category_id' => 'sometimes|exists:categories,id',
-            'sku' => 'sometimes|string|unique:products,sku,' . $product->id,
+            'sku' => [
+                'sometimes',
+                'string',
+                'max:100',
+                Rule::unique('products', 'sku')->ignore($product->id),
+            ],
             'name' => 'sometimes|string|max:255',
             'description' => 'nullable|string',
-            'unit' => 'nullable|string',
-            'cost_price' => 'numeric|min:0',
-            'selling_price' => 'numeric|min:0',
-            'reorder_level' => 'integer|min:0',
-            'is_active' => 'boolean',
+            'unit' => 'nullable|string|in:piece,box,kg,liter,meter',
+            'cost_price' => 'sometimes|numeric|min:0',
+            'selling_price' => 'sometimes|numeric|min:0',
+            'reorder_level' => 'sometimes|integer|min:0',
+            'is_active' => 'sometimes|boolean',
         ]);
 
         DB::transaction(function () use ($product, $validated) {
             $product->update($validated);
         });
+
+        $product->load('category');
 
         return response()->json([
             'message' => 'Product updated successfully',

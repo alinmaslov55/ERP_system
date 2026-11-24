@@ -23,6 +23,16 @@ class Product extends Model
         'is_active'
     ];
 
+    protected function casts(): array
+    {
+        return [
+            'cost_price' => 'decimal:2',
+            'selling_price' => 'decimal:2',
+            'reorder_level' => 'integer',
+            'is_active' => 'boolean',
+        ];
+    }
+
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);

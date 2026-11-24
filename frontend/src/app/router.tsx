@@ -3,6 +3,7 @@ import AppShell from '../components/layout/AppShell';
 import ProtectedRoute from '../components/layout/ProtectedRoute';
 import DashboardPage from '../features/dashboard/DashboardPage';
 import ProductList from '../features/products/ProductList';
+import ProductDetailPage from '../features/products/ProductDetailPage';
 import CategoriesPage from '../features/categories/CategoriesPage';
 import UsersPage from '../features/admin/UsersPage';
 import AuditLogsPage from '../features/admin/AuditLogsPage';
@@ -34,14 +35,7 @@ export const router = createBrowserRouter([
       },
       {
         path: 'inventory/products/:id',
-        element: (
-          <PlaceholderPage
-            code="PRD-003"
-            title="Product Detail"
-            category="Inventory"
-            description="Detailed product attributes, barcodes, suppliers, and stock allocation across warehouses."
-          />
-        ),
+        element: <ProductDetailPage />,
       },
       {
         path: 'inventory/categories',
